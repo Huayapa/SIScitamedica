@@ -33,6 +33,7 @@ $searchTerm = request('search', '');
         </div>
 
         {{-- Botón y Modal Trigger --}}
+        <div>
         <button
             onclick="document.getElementById('newDoctorModal').classList.remove('hidden')"
             class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md focus:ring-4 focus:ring-blue-600/50"
@@ -40,6 +41,14 @@ $searchTerm = request('search', '');
             {!! getIconSvg('Plus', 'w-4 h-4 mr-2') !!}
             Nuevo Médico
         </button>
+
+        <a href="{{ route('specialty.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Gestión Especialidad
+        </a>
+        </div>
     </div>
 
     {{-- Search Card (Formulario de Búsqueda) --}}
@@ -124,17 +133,13 @@ $searchTerm = request('search', '');
 
                         {{-- Action Buttons --}}
                         <div class="flex flex-col sm:flex-row gap-2 pt-4">
-                            <a href="{{ route('doctors.show', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
-                                {!! getIconSvg('Eye', 'w-4 h-4 mr-1') !!}
-                                Ver Perfil
-                            </a>
                             <a href="{{ route('doctors.edit', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
                                 {!! getIconSvg('Edit', 'w-4 h-4 mr-1') !!}
                                 Editar
                             </a>
-                            <a href="{{ route('doctors.schedule', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
+                            <a href="{{ route('doctors.destroy', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
                                 {!! getIconSvg('Clock', 'w-4 h-4 mr-1') !!}
-                                Horarios
+                                Eliminar
                             </a>
                         </div>
                     </div>

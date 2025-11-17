@@ -6,6 +6,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SpecialtiesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +38,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
     Route::get('reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
+
+    // Especialidad
+    Route::get('specialty', [SpecialtiesController::class, 'index'])->name('specialty.index');
+    Route::get('specialty', [SpecialtiesController::class, 'create'])->name('specialty.create');
+    Route::resource('specialty', SpecialtiesController::class);
 });
 
 

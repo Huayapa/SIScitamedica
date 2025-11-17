@@ -11,6 +11,7 @@ class DoctorController extends Controller
     public function index(Request $request)
     {
         $query = Doctor::with('specialty');
+        $specialties = Specialty::all();
 
         // Búsqueda
         if ($request->has('search')) {
@@ -28,7 +29,7 @@ class DoctorController extends Controller
         $doctors = $query->orderBy('first_name')
                         ->paginate(12);
 
-        return view('dashboard.doctors', compact('doctors'));
+        return view('dashboard.doctors', compact('doctors', 'specialties'));
     }
 
     public function create()

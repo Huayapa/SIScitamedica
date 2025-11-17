@@ -96,8 +96,8 @@
 
                     <!-- Actions -->
                     <div class="flex gap-2 pt-2">
-                        <a href="{{ route('patients.show', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
-                            Ver
+                        <a href="{{ route('patients.destroy', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
+                            Borrar
                         </a>
                         <a href="{{ route('patients.edit', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
                             Editar
