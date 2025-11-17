@@ -12,12 +12,13 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
-
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
+    protected $dateFormat = 'Ymd H:i:s';
     protected $fillable = [
         'name',
         'email',

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AvailableSchedule extends Model
 {
+    protected $dateFormat = 'Ymd H:i:s';
     protected $table = 'available_schedules';
 
     protected $fillable = [

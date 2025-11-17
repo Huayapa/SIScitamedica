@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
+    protected $dateFormat = 'Ymd H:i:s';
     protected $fillable = [
         'user_id',
         'first_name',
