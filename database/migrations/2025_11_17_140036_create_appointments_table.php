@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('doctor_id')->constrained('doctors');
+            $table->date('appointment_date');
+            $table->time('appointment_time');
+            $table->enum('status', ['Pending', 'Confirmed', 'Cancelled', 'Completed'])->default('Pending');
+            $table->text('reason')->nullable();
+            $table->unique(['doctor_id', 'appointment_date', 'appointment_time']);
             $table->timestamps();
         });
     }

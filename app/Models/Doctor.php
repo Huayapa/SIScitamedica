@@ -6,5 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'first_name',
+        'last_name',
+        'medical_license',
+        'specialty_id',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function specialty()
+    {
+        return $this->belongsTo(Specialty::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(AvailableSchedule::class);
+    }
 }

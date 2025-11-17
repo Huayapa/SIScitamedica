@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('specialties', function (Blueprint $table) {
             $table->id();
+            $table->string('specialty_name')->unique(); 
             $table->timestamps();
         });
     }

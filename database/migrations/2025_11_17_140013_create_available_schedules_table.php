@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('available_schedules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
+            $table->enum('day_of_week', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('consulting_room')->nullable();
+            $table->unique(['doctor_id', 'day_of_week', 'start_time']);
             $table->timestamps();
         });
     }

@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class MedicalRecord extends Model
 {
-    //
+    protected $table = 'medical_records';
+    protected $fillable = [
+        'appointment_id',
+        'diagnosis',
+        'medical_notes',
+        'prescription',
+    ];
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
 }
