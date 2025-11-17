@@ -7,59 +7,98 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Patient::query();
+
+        // Búsqueda
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('document_number', 'like', "%{$search}%");
+            });
+        }
+
+        $patients = $query->orderBy('first_name')
+                         ->paginate(12);
+
+        return view('dashboard.paciente', compact('patients'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('dashboard.pacientecreate');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'document_number' => 'required|string|max:20|unique:patients',
+            'birth_date' => 'required|date|before:today',
+            'gender' => 'required|in:Masculino,Femenino,Otro',
+            'email' => 'required|email|unique:patients',
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string',
+            'blood_type' => 'nullable|string|max:5',
+            'allergies' => 'nullable|string',
+        ]);
+
+        // Generar código automático
+        $validated['code'] = 'PAC-' . str_pad(Patient::count() + 1, 6, '0', STR_PAD_LEFT);
+
+        Patient::create($validated);
+
+        return redirect()->route('patients.index')
+                        ->with('success', 'Paciente registrado exitosamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Patient $patient)
     {
-        //
+        $patient->load(['appointments' => function($query) {
+            $query->with('doctor.specialty')
+                  ->orderBy('appointment_date', 'desc');
+        }]);
+
+        return view('patients.show', compact('patient'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Patient $patient)
     {
-        //
+        return view('patients.edit', compact('patient'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Patient $patient)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'document_number' => 'required|string|max:20|unique:patients,document_number,' . $patient->id,
+            'birth_date' => 'required|date|before:today',
+            'gender' => 'required|in:Masculino,Femenino,Otro',
+            'email' => 'required|email|unique:patients,email,' . $patient->id,
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string',
+            'blood_type' => 'nullable|string|max:5',
+            'allergies' => 'nullable|string',
+        ]);
+
+        $patient->update($validated);
+
+        return redirect()->route('patients.index')
+                        ->with('success', 'Paciente actualizado exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return redirect()->route('patients.index')
+                        ->with('success', 'Paciente eliminado exitosamente');
     }
 }

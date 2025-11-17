@@ -14,23 +14,35 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="bg-slate-950 text-slate-200">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            @include('components.header')
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+                @if(session('success'))
+                    <div class="mb-4 p-4 bg-green-900 border border-green-700 text-green-200 rounded-lg">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="mb-4 p-4 bg-red-900 border border-red-700 text-red-200 rounded-lg">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @yield('content')
             </main>
         </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     </body>
 </html>

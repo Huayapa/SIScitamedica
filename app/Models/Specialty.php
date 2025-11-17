@@ -8,9 +8,18 @@ class Specialty extends Model
 {
     protected $dateFormat = 'Ymd H:i:s';
     protected $fillable = [
-        'specialty_name',
+        'name',
+        'description',
+        'is_active',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * Relación: Una especialidad tiene muchos médicos
+     */
     public function doctors()
     {
         return $this->hasMany(Doctor::class);
