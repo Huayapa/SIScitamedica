@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Reportes - MediCitas')
+@section('title', 'Reportes - Medify')
 
 @section('content')
 

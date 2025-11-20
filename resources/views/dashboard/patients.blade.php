@@ -1,9 +1,41 @@
 @extends('layouts.app')
 
-@section('title', 'Gestión de Pacientes - MediCitas')
+@section('title', 'Gestión de Pacientes - Medify')
 
 @section('content')
-<div class="space-y-6">
+<div x-data="{
+    editingPatient: null,
+    deletingPatient: null,
+
+    openEditPatientModal(patient) {
+        this.editingPatient = patient;
+
+        // Set values
+        document.getElementById('edit_patient_first_name').value = patient.first_name;
+        document.getElementById('edit_patient_last_name').value = patient.last_name;
+        document.getElementById('edit_patient_document_number').value = patient.document_number;
+        document.getElementById('edit_patient_birth_date').value = patient.birth_date ? patient.birth_date.substring(0, 10) : '';
+        document.getElementById('edit_patient_gender').value = patient.gender;
+        document.getElementById('edit_patient_email').value = patient.email;
+        document.getElementById('edit_patient_phone').value = patient.phone;
+        document.getElementById('edit_patient_address').value = patient.address ?? '';
+        document.getElementById('edit_patient_blood_type').value = patient.blood_type ?? '';
+        document.getElementById('edit_patient_allergies').value = patient.allergies ?? '';
+
+        // Action
+        document.getElementById('edit_patient_form').action = '/patients/' + patient.id;
+
+        $dispatch('open-modal', 'edit-patient');
+    },
+
+    openDeletePatientModal(patient) {
+        this.deletingPatient = patient;
+
+        document.getElementById('delete_patient_form').action = '/patients/' + patient.id;
+
+        $dispatch('open-modal', 'delete-patient');
+    }
+}" class="space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -96,12 +128,17 @@
 
                     <!-- Actions -->
                     <div class="flex gap-2 pt-2">
-                        <a href="{{ route('patients.destroy', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
-                            Borrar
-                        </a>
-                        <a href="{{ route('patients.update', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
+                        <button 
+                            @click="openEditPatientModal(@js($patient))"
+                            class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg hover:bg-slate-700 transition-colors">
                             Editar
-                        </a>
+                        </button>
+
+                        <button 
+                            @click="openDeletePatientModal(@js($patient))"
+                            class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg hover:bg-slate-700 transition-colors">
+                            Borrar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -119,4 +156,5 @@
         </div>
     @endif
 </div>
+@include('modals.modalpatients')
 @endsection

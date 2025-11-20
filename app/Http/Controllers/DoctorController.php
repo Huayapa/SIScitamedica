@@ -35,7 +35,8 @@ class DoctorController extends Controller
     public function create()
     {
         $specialties = Specialty::where('is_active', true)->orderBy('name')->get();
-        return view('create.doctorscreate');
+
+        return view('create.doctorscreate', compact('specialties'));
     }
 
     public function store(Request $request)

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestión de Médicos')
+@section('title', 'Gestión de Medify')
 
 @section('content')
 
@@ -24,7 +24,38 @@ function getIconSvg($iconName, $class = 'w-5 h-5') {
 $searchTerm = request('search', '');
 @endphp
 
-<div class="space-y-6 p-4 md:p-8 bg-slate-950 min-h-screen">
+<div x-data="{
+    editingDoctor: null,
+    deletingDoctor: null,
+
+    openEditDoctorModal(doctor) {
+        // rellenar inputs
+        document.getElementById('edit_doctor_first_name').value = doctor.first_name;
+        document.getElementById('edit_doctor_last_name').value = doctor.last_name;
+        document.getElementById('edit_doctor_license_number').value = doctor.license_number;
+        document.getElementById('edit_doctor_specialty_id').value = doctor.specialty_id;
+        document.getElementById('edit_doctor_email').value = doctor.email;
+        document.getElementById('edit_doctor_phone').value = doctor.phone;
+        document.getElementById('edit_doctor_office').value = doctor.office ?? '';
+        document.getElementById('edit_doctor_schedule').value = doctor.schedule ?? '';
+        document.getElementById('edit_doctor_experience_years').value = doctor.experience_years;
+        document.getElementById('edit_doctor_is_available').checked = doctor.is_available;
+
+        // actualizar acción del form
+        document.getElementById('edit_doctor_form').action = `/doctors/${doctor.id}`;
+
+        // abrir modal
+        $dispatch('open-modal', 'edit-doctor');
+    },
+
+    openDeleteDoctorModal(doctor) {
+        this.deletingDoctor = doctor;
+        document.getElementById('delete_doctor_form').action = `/doctors/${doctor.id}`;
+        $dispatch('open-modal', 'delete-doctor');
+    },
+}"
+
+class="space-y-6 p-4 md:p-8 bg-slate-950 min-h-screen">
     {{-- Header y Botón de Nuevo Médico --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -33,14 +64,14 @@ $searchTerm = request('search', '');
         </div>
 
         {{-- Botón y Modal Trigger --}}
-        <div>
-        <button
-            onclick="document.getElementById('newDoctorModal').classList.remove('hidden')"
+        <div class="flex gap-[10px]">
+        <a
+            href="{{ route('doctors.create') }}"
             class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md focus:ring-4 focus:ring-blue-600/50"
         >
-            {!! getIconSvg('Plus', 'w-4 h-4 mr-2') !!}
+            <span class="material-icons">add</span>
             Nuevo Médico
-        </button>
+        </a>
 
         <a href="{{ route('specialty.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,14 +164,18 @@ $searchTerm = request('search', '');
 
                         {{-- Action Buttons --}}
                         <div class="flex flex-col sm:flex-row gap-2 pt-4">
-                            <a href="{{ route('doctors.update', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
+                            <button 
+                            @click="openEditDoctorModal(@js($doctor))"
+                            class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
                                 {!! getIconSvg('Edit', 'w-4 h-4 mr-1') !!}
                                 Editar
-                            </a>
-                            <a href="{{ route('doctors.destroy', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
+                            </button>
+                            <button 
+                            @click="openDeleteDoctorModal(@js($doctor))"
+                            class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
                                 {!! getIconSvg('Clock', 'w-4 h-4 mr-1') !!}
                                 Eliminar
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -159,148 +194,7 @@ $searchTerm = request('search', '');
     </div>
 </div>
 
-{{-- MODAL DE REGISTRO (Implementación simple con JS/Tailwind para simular el Dialog React) --}}
-<div id="newDoctorModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 transition-opacity duration-300" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-center justify-center min-h-full p-4 sm:p-0">
-        {{-- Modal Content --}}
-        <div class="w-full max-w-2xl transform overflow-hidden rounded-xl bg-slate-900 border border-slate-800 shadow-2xl transition-all duration-300">
-            <form method="POST" action="{{ route('doctors.store') }}">
-                @csrf
-                <div class="p-6">
-                    {{-- Dialog Header --}}
-                    <div class="border-b border-slate-800 pb-4 mb-4">
-                        <h3 id="modal-title" class="text-xl font-semibold text-white">Registrar Nuevo Médico</h3>
-                    </div>
-
-                    {{-- Form Content --}}
-                    <div class="space-y-4 py-4">
-                        {{-- Validation Errors (Laravel) --}}
-                        @if ($errors->any())
-                            <div class="bg-red-900/50 border border-red-700 text-red-300 p-3 rounded-lg text-sm mb-4">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>- {{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="space-y-2">
-                                <label for="first_name" class="block text-sm font-medium text-slate-300">Nombre</label>
-                                <input id="first_name" name="first_name" type="text" placeholder="Dr./Dra. Nombre" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('first_name') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="last_name" class="block text-sm font-medium text-slate-300">Apellido</label>
-                                <input id="last_name" name="last_name" type="text" placeholder="Apellido" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('last_name') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="license_number" class="block text-sm font-medium text-slate-300">Nº Colegiatura (CMP)</label>
-                                <input id="license_number" name="license_number" type="text" placeholder="CMP-12345" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('license_number') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="specialty_id" class="block text-sm font-medium text-slate-300">Especialidad</label>
-                                {{-- NOTA: El DoctorController::index no carga `$specialties`. Asumo que esta variable se pasaría si el formulario estuviera en un archivo `create.blade.php`, pero para mantener la funcionalidad en `index.blade.php`, se necesita pasar. Aquí se usa un placeholder para el select. --}}
-                                <select id="specialty_id" name="specialty_id" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                    <option value="" disabled selected>Selecciona una Especialidad</option>
-                                    {{-- El bucle real necesitaría que $specialties sea pasado al view --}}
-                                    @if (isset($specialties) && count($specialties) > 0)
-                                        @foreach ($specialties as $specialty)
-                                            <option value="{{ $specialty->id }}" {{ old('specialty_id') == $specialty->id ? 'selected' : '' }}>
-                                                {{ $specialty->name }}
-                                            </option>
-                                        @endforeach
-                                    @else
-                                        <option value="1">Cardiología (Placeholder)</option>
-                                        <option value="2">Pediatría (Placeholder)</option>
-                                        <option value="3">Dermatología (Placeholder)</option>
-                                    @endif
-                                </select>
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="phone" class="block text-sm font-medium text-slate-300">Teléfono</label>
-                                <input id="phone" name="phone" type="tel" placeholder="+51 987 654 321" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('phone') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="email" class="block text-sm font-medium text-slate-300">Correo Electrónico</label>
-                                <input id="email" name="email" type="email" placeholder="doctor@medicitas.com" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('email') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="office" class="block text-sm font-medium text-slate-300">Consultorio</label>
-                                <input id="office" name="office" type="text" placeholder="Ej: Consultorio 201"
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('office') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="schedule" class="block text-sm font-medium text-slate-300">Horario de Atención</label>
-                                <input id="schedule" name="schedule" type="text" placeholder="Lun-Vie: 9:00-17:00"
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('schedule') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="experience_years" class="block text-sm font-medium text-slate-300">Años de Experiencia</label>
-                                <input id="experience_years" name="experience_years" type="number" min="0" placeholder="10" required
-                                    class="w-full px-3 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-blue-500 focus:border-blue-500"
-                                    value="{{ old('experience_years') }}"
-                                />
-                            </div>
-
-                            <div class="space-y-2 flex items-center pt-4">
-                                <input id="is_available" name="is_available" type="checkbox" value="1"
-                                    class="w-4 h-4 text-blue-600 bg-slate-800 border-slate-700 rounded focus:ring-blue-500"
-                                    {{ old('is_available', true) ? 'checked' : '' }}
-                                />
-                                <label for="is_available" class="ml-2 text-sm font-medium text-slate-300">Disponible para citas</label>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {{-- Dialog Footer --}}
-                    <div class="flex justify-end gap-2 pt-4 border-t border-slate-800/70">
-                        <button type="button" onclick="document.getElementById('newDoctorModal').classList.add('hidden')"
-                            class="inline-flex justify-center rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors"
-                        >
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
-                        >
-                            Registrar Médico
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 
+@include('modals.modaldoctors')
 @endsection

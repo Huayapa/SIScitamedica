@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nuevo Paciente - MediCitas')
+@section('title', 'Nuevo Paciente - Medify')
 
 @section('content')
 <div class="max-w-4xl mx-auto">

@@ -1,15 +1,20 @@
-<aside class="w-64 bg-slate-900 border-r border-slate-800 hidden lg:block">
+<div 
+    x-show="sidebarOpen"
+    @click="sidebarOpen = false"
+    class="fixed inset-0 bg-black/50 z-30 lg:hidden"
+></div>
+<aside 
+    class="w-64 bg-slate-900 border-r border-slate-800 
+           fixed inset-y-0 left-0 transform transition-transform duration-200 
+           lg:translate-x-0 lg:static
+           z-40"
+    :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
+>
     <div class="flex flex-col h-full">
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-800">
-            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                </svg>
-            </div>
-            <div>
-                <div class="text-white font-semibold">MediCitas</div>
-                <div class="text-xs text-slate-400">Gestión Clínica</div>
+        <div class="flex items-center justify-center gap-3 px-6 py-5 border-b border-slate-800">
+            <div style="width:200px">
+                {!! file_get_contents(public_path('logo.svg')) !!}
             </div>
         </div>
 

@@ -42,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Reportes
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('reports/create', [ReportController::class, 'create'])->name('reports.create');
     Route::post('reports', [ReportController::class, 'store'])->name('reports.store');
     Route::put('reports/{report}', [ReportController::class, 'update'])->name('reports.update');
     Route::delete('reports/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
