@@ -45,8 +45,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('reports', [ReportController::class, 'store'])->name('reports.store');
     Route::put('reports/{report}', [ReportController::class, 'update'])->name('reports.update');
     Route::delete('reports/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
-    Route::get('reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
-    Route::get('reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
+    Route::get('reports/export-pdf', [ReportController::class, 'exportPdf'])
+    ->name('reports.export-pdf');
+    // Route::get('reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
     // Especialidad
     Route::get('specialties', [SpecialtiesController::class, 'index'])->name('specialty.index');

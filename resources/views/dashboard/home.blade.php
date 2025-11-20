@@ -18,7 +18,7 @@
                 <div class="space-y-2">
                     <p class="text-sm text-slate-400">Citas de Hoy</p>
                     <h3 class="text-3xl font-semibold text-white">{{ $stats['todayAppointments'] }}</h3>
-                    <p class="text-xs text-green-500">+12% vs mes anterior</p>
+                    <p class="text-xs text-green-500">Citas</p>
                 </div>
                 <div class="bg-blue-500 p-3 rounded-lg">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
                 <div class="space-y-2">
                     <p class="text-sm text-slate-400">Pacientes Activos</p>
                     <h3 class="text-3xl font-semibold text-white">{{ $stats['activePatients'] }}</h3>
-                    <p class="text-xs text-green-500">+8% vs mes anterior</p>
+                    <p class="text-xs text-green-500">Pacientes</p>
                 </div>
                 <div class="bg-green-500 p-3 rounded-lg">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
                 <div class="space-y-2">
                     <p class="text-sm text-slate-400">Médicos Disponibles</p>
                     <h3 class="text-3xl font-semibold text-white">{{ $stats['availableDoctors'] }}</h3>
-                    <p class="text-xs text-green-500">+2 nuevos</p>
+                    <p class="text-xs text-green-500">Médicos</p>
                 </div>
                 <div class="bg-purple-500 p-3 rounded-lg">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +66,7 @@
                 <div class="space-y-2">
                     <p class="text-sm text-slate-400">Tasa de Ocupación</p>
                     <h3 class="text-3xl font-semibold text-white">{{ $stats['occupancyRate'] }}%</h3>
-                    <p class="text-xs text-green-500">+5% vs mes anterior</p>
+                    <p class="text-xs text-green-500">Tasas</p>
                 </div>
                 <div class="bg-orange-500 p-3 rounded-lg">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

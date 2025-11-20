@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Specialty;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str; // Necesario para Str::limit
@@ -209,7 +210,11 @@ class ReportController extends Controller
     public function exportPdf()
     {
         
-        return response()->json(['message' => 'Exportación a PDF en desarrollo']);
+        $appointments = Appointment::with(['patient', 'doctor'])->get();
+
+        $pdf = Pdf::loadView('reports.pdf', compact('appointments'));
+
+        return $pdf->download('reporte-citas.pdf');
     }
 
     public function exportExcel()

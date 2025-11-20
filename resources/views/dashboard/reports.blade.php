@@ -34,10 +34,6 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
                 {!! getIconSvg('Download', 'w-4 h-4 mr-2') !!}
                 Exportar PDF
             </a>
-            <a href="{{ route('reports.export-excel') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 px-4 py-2 border border-slate-700 text-slate-300 hover:bg-slate-800">
-                {!! getIconSvg('FileText', 'w-4 h-4 mr-2') !!}
-                Exportar Excel
-            </a>
         </div>
     </div>
 
@@ -78,9 +74,7 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
                 <h3 class="text-white text-lg font-semibold">Citas por Día de la Semana</h3>
             </div>
             <div class="p-6">
-                <div class="{{ $chartPlaceholderStyle }}">
-                    Gráfico de Barras (Inyectar Chart.js/Recharts aquí)
-                </div>
+                <canvas id="chartByDay"></canvas>
             </div>
         </div>
 
@@ -89,8 +83,8 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
                 <h3 class="text-white text-lg font-semibold">Estado de Citas</h3>
             </div>
             <div class="p-6">
-                <div class="{{ $chartPlaceholderStyle }}">
-                    Gráfico de Torta (Inyectar Chart.js/Recharts aquí)
+                <div class="flex justify-center">
+                    <canvas id="chartStatus" class="w-[300px] h-[300px]"></canvas>
                 </div>
             </div>
         </div>
@@ -103,9 +97,7 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
                 <h3 class="text-white text-lg font-semibold">Ocupación por Médico</h3>
             </div>
             <div class="p-6">
-                <div class="{{ $chartPlaceholderStyle }}">
-                    Gráfico de Barras Vertical (Inyectar Chart.js/Recharts aquí)
-                </div>
+                <canvas id="chartDoctor"></canvas>
             </div>
         </div>
 
@@ -114,9 +106,7 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
                 <h3 class="text-white text-lg font-semibold">Tendencia Mensual</h3>
             </div>
             <div class="p-6">
-                <div class="{{ $chartPlaceholderStyle }}">
-                    Gráfico de Líneas (Inyectar Chart.js/Recharts aquí)
-                </div>
+                <canvas id="chartTrend"></canvas>
             </div>
         </div>
     </div>
@@ -154,5 +144,85 @@ function getIconSvg($iconName, $class = 'w-5 h-5 text-white') {
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // ---- 1. Citas por Día de la Semana ----
+    const chartByDayCtx = document.getElementById('chartByDay');
+
+    new Chart(chartByDayCtx, {
+        type: 'bar',
+        data: {
+            labels: @json(array_column($appointmentsByDay, 'day')),
+            datasets: [{
+                label: 'Citas',
+                data: @json(array_column($appointmentsByDay, 'citas')),
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+
+    // ---- 2. Estado de Citas ----
+    const chartStatusCtx = document.getElementById('chartStatus');
+
+    new Chart(chartStatusCtx, {
+        type: 'pie',
+        data: {
+            labels: @json(array_column($appointmentStatus, 'name')),
+            datasets: [{
+                data: @json(array_column($appointmentStatus, 'value')),
+                backgroundColor: @json(array_column($appointmentStatus, 'color'))
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // importante
+        }
+    });
+
+
+    // ---- 3. Ocupación por Médico ----
+    const chartDoctorCtx = document.getElementById('chartDoctor');
+
+    new Chart(chartDoctorCtx, {
+        type: 'bar',
+        data: {
+            labels: @json(array_column($appointmentsByDoctor, 'name')),
+            datasets: [{
+                label: 'Citas',
+                data: @json(array_column($appointmentsByDoctor, 'citas')),
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+        }
+    });
+
+
+    // ---- 4. Tendencia Mensual ----
+    const chartTrendCtx = document.getElementById('chartTrend');
+
+    new Chart(chartTrendCtx, {
+        type: 'line',
+        data: {
+            labels: @json(array_column($monthlyTrend, 'mes')),
+            datasets: [{
+                label: 'Citas',
+                data: @json(array_column($monthlyTrend, 'citas')),
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+</script>
 
 @endsection
