@@ -1,0 +1,338 @@
+@urlbase = http://127.0.0.1:8000/api
+@token =  3|zMvcGr86BwxGLYhngzu8WlioKnZifZqX1xJFXH2kb2637738
+
+###
+POST {{urlbase}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "josue@gmail.com",
+  "password": "12345678"
+}
+
+###
+POST {{urlbase}}/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "josue3",
+  "email": "josue3@gmail.com",
+  "password": "12345678"
+}
+
+
+###
+POST {{urlbase}}/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
+
+###
+# APPOINTMENTS
+GET {{urlbase}}/appointments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+POST {{urlbase}}/appointments
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "patient_id": 1,
+  "doctor_id": 1,
+  "appointment_date": "2025-11-25",
+  "appointment_time": "10:30",
+  "reason": "Consulta general",
+  "notes": "Paciente con síntomas leves"
+}
+
+###
+
+GET {{urlbase}}/appointments/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+PUT {{urlbase}}/appointments/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "patient_id": 1,
+  "doctor_id": 1,
+  "appointment_date": "2025-11-26",
+  "appointment_time": "11:00",
+  "status": "confirmed",
+  "reason": "Consulta general",
+  "notes": "Actualización de notas",
+  "diagnosis": "Sin diagnóstico aún"
+}
+
+###
+
+DELETE {{urlbase}}/appointments/3
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+# DOCTORS
+GET {{urlbase}}/doctors
+Authorization: Bearer {{token}}
+
+###
+
+POST {{urlbase}}/doctors
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "first_name": "Carlos",
+  "last_name": "Pérez",
+  "license_number": "123456923",
+  "specialty_id": 1,
+  "email": "carlos2@example.com",
+  "phone": "987654321",
+  "office": "101",
+  "schedule": "Lunes-Viernes 9-17",
+  "experience_years": 5,
+  "is_available": true
+}
+
+###
+
+GET {{urlbase}}/doctors/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{urlbase}}/doctors/4
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "first_name": "Carlos 2",
+  "last_name": "Pérez",
+  "license_number": "123456923",
+  "specialty_id": 1,
+  "email": "carlos2@example.com",
+  "phone": "987654321",
+  "office": "101",
+  "schedule": "Lunes-Viernes 9-17",
+  "experience_years": 5,
+  "is_available": true
+}
+
+###
+
+DELETE {{urlbase}}/doctors/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+# PATIENTS
+GET {{urlbase}}/patients
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+POST {{urlbase}}/patients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "first_name": "Ana",
+  "last_name": "Gómez",
+  "document_number": "987654321",
+  "birth_date": "1990-05-12",
+  "gender": "Femenino",
+  "email": "ana@example.com",
+  "phone": "987654321",
+  "address": "Av. Siempre Viva 123",
+  "blood_type": "O+",
+  "allergies": "Ninguna"
+}
+
+###
+
+GET {{urlbase}}/patients/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{urlbase}}/patients/4
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "first_name": "Ana",
+  "last_name": "Gómez",
+  "document_number": "987654321",
+  "birth_date": "1990-05-12",
+  "gender": "Femenino",
+  "email": "ana@example.com",
+  "phone": "987654321",
+  "address": "Av. Siempre Viva 123",
+  "blood_type": "O+",
+  "allergies": "Actualización de alergias"
+}
+
+###
+
+DELETE {{urlbase}}/patients/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+# ROLES
+GET {{urlbase}}/roles
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+POST {{urlbase}}/roles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "role_name": "Administrador"
+}
+
+###
+
+GET {{urlbase}}/roles/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{urlbase}}/roles/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "role_name": "Usuario"
+}
+
+###
+
+DELETE {{urlbase}}/roles/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+# SPECIALTIES
+GET {{urlbase}}/specialties
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+POST {{urlbase}}/specialties
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Psicologo",
+  "description": "Especialidad mental",
+  "is_active": true
+}
+
+###
+
+GET {{urlbase}}/specialties/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{urlbase}}/specialties/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Cardiología",
+  "description": "Actualización de descripción",
+  "is_active": true
+}
+
+###
+
+DELETE {{urlbase}}/specialties/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+# USERS
+GET {{urlbase}}/users
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+POST {{urlbase}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Josue Huayapa",
+  "email": "josue.user@example.com",
+  "password": "12345678",
+  "role_id": 1
+}
+
+###
+
+GET {{urlbase}}/users/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{urlbase}}/users/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Josue Huayapa",
+  "email": "josue.user@example.com",
+  "password": "87654321",
+  "role_id": 1
+}
+
+###
+
+DELETE {{urlbase}}/users/1
+Authorization: Bearer {{token}}
+Accept: application/json
