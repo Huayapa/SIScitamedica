@@ -54,6 +54,10 @@
                 </svg>
                 <span>Reportes</span>
             </a>
+            <a href="{{ route('user.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('user.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                <span class="material-icons w-5 h-5" >person</span>
+                <span>Usuarios</span>
+            </a>
         </nav>
 
         <!-- User info -->

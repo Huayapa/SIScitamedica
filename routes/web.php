@@ -6,7 +6,9 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SpecialtiesController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -55,6 +57,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('specialties', [SpecialtiesController::class, 'store'])->name('specialty.store');
     Route::put('specialties/{specialty}', [SpecialtiesController::class, 'update'])->name('specialty.update');
     Route::delete('specialties/{specialty}', [SpecialtiesController::class, 'destroy'])->name('specialty.destroy');
+    // Usuario
+    Route::get('users', [UserController::class, 'index'])->name('user.index');
+    Route::get('users/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('users', [UserController::class, 'store'])->name('user.store');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    // Role
+    Route::get('roles', [RoleController::class, 'index'])->name('role.index');
+    Route::get('roles/create', [RoleController::class, 'create'])->name('role.create');
+    Route::post('roles', [RoleController::class, 'store'])->name('role.store');
+    Route::put('roles/{role}', [RoleController::class, 'update'])->name('role.update');
+    Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
 });
 
 
