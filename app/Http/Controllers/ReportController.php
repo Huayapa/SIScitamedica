@@ -175,7 +175,7 @@ class ReportController extends Controller
             })->toArray();
 
 
-        return view('dashboard.reportsindex', compact(
+        return view('dashboard.reports', compact(
             'stats',
             'appointmentsByDay',
             'appointmentsByDoctor',
@@ -185,6 +185,9 @@ class ReportController extends Controller
         ));
     }
 
+    public function create() {
+        return view('create.reportscreate');
+    }
     /**
      * Calcula la tasa de asistencia.
      */
@@ -205,6 +208,7 @@ class ReportController extends Controller
 
     public function exportPdf()
     {
+        
         return response()->json(['message' => 'Exportación a PDF en desarrollo']);
     }
 

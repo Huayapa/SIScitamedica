@@ -133,7 +133,7 @@ $searchTerm = request('search', '');
 
                         {{-- Action Buttons --}}
                         <div class="flex flex-col sm:flex-row gap-2 pt-4">
-                            <a href="{{ route('doctors.edit', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
+                            <a href="{{ route('doctors.update', $doctor) }}" class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors duration-150">
                                 {!! getIconSvg('Edit', 'w-4 h-4 mr-1') !!}
                                 Editar
                             </a>

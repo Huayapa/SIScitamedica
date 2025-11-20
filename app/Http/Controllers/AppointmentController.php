@@ -12,16 +12,19 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $query = Appointment::with(['patient', 'doctor.specialty']);
+        $patients = Patient::orderBy('first_name')->get();
+        $doctors = Doctor::with('specialty')->orderBy('first_name')->get();
+        
 
         // Búsqueda
         if ($request->has('search')) {
             $search = $request->search;
             $query->whereHas('patient', function($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%");
+                ->orWhere('last_name', 'like', "%{$search}%");
             })->orWhereHas('doctor', function($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%");
+                ->orWhere('last_name', 'like', "%{$search}%");
             });
         }
 
@@ -31,10 +34,10 @@ class AppointmentController extends Controller
         }
 
         $appointments = $query->orderBy('appointment_date', 'desc')
-                             ->orderBy('appointment_time', 'desc')
-                             ->paginate(15);
+                            ->orderBy('appointment_time', 'desc')
+                            ->paginate(15);
 
-        return view('dashboard.appointments', compact('appointments'));
+        return view('dashboard.appointments', compact('appointments', 'patients', 'doctors'));
     }
 
     public function create()
@@ -42,7 +45,7 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('first_name')->get();
         $doctors = Doctor::with('specialty')->available()->orderBy('first_name')->get();
         
-        return view('dashboard.appointmentscreate', compact('patients', 'doctors'));
+        return view('create.appointmentscreate', compact('patients', 'doctors'));
     }
 
     public function store(Request $request)
@@ -65,7 +68,7 @@ class AppointmentController extends Controller
     public function show(Appointment $appointment)
     {
         $appointment->load(['patient', 'doctor.specialty']);
-        return view('appointments.show', compact('appointment'));
+        return view('dashboard.appointments', compact('appointment'));
     }
 
     public function edit(Appointment $appointment)
@@ -73,7 +76,7 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('first_name')->get();
         $doctors = Doctor::with('specialty')->available()->orderBy('first_name')->get();
         
-        return view('appointments.edit', compact('appointment', 'patients', 'doctors'));
+        return view('dashboard.appointments', compact('appointment', 'patients', 'doctors'));
     }
 
     public function update(Request $request, Appointment $appointment)

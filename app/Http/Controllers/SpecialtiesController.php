@@ -12,26 +12,17 @@ class SpecialtiesController extends Controller
     {
         $specialties = Specialty::all();
         // Nota: En un entorno real, usarías Specialty::paginate(15) para rendimiento.
-        return view('dashboard.specialtyindex', compact('specialties'));
+        return view('dashboard.specialties', compact('specialties'));
     }
 
-    /**
-     * Muestra la vista para crear una nueva especialidad (el formulario).
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
-        return view('dashboard.specialtycreate');
+        return view('create.specialtiescreate');
     }
 
     public function show(Specialty $specialty)
     {
-        // Puedes redirigir a la lista de especialidades (index)
         return redirect()->route('specialty.index'); 
-        
-        // O podrías hacer una vista para mostrar una especialidad específica:
-        // return view('specialties.show', compact('specialty'));
     }
 
 
@@ -54,26 +45,9 @@ class SpecialtiesController extends Controller
         Specialty::create($validated);
 
         return redirect()->route('specialty.index')
-                         ->with('success', 'Especialidad registrada exitosamente.');
+                        ->with('success', 'Especialidad registrada exitosamente.');
     }
 
-    /**
-     * Muestra el formulario de edición (o datos para el modal) de la especialidad especificada.
-     *
-     * Nota: Normalmente se usa para cargar datos en un modal o una vista separada.
-     *
-     * @param  \App\Models\Specialty  $specialty
-     * @return \Illuminate\View\View
-     */
-    public function edit(Specialty $specialty)
-    {
-        // En este caso, solo retornaremos la vista de índice, ya que el modal usará
-        // esta misma ruta para construir la URL de actualización en el frontend,
-        // o si usas Livewire/Inertia, cargarías el componente.
-        // Si no usas JS/Livewire, podrías retornar un fragmento JSON de los datos.
-        // Pero para el patrón Blade estándar, el modal estará en el index.
-        return view('specialty.index', ['specialties' => Specialty::all(), 'editingSpecialty' => $specialty]);
-    }
 
     /**
      * Actualiza la especialidad especificada en la base de datos.
@@ -94,7 +68,7 @@ class SpecialtiesController extends Controller
         $specialty->update($validated);
 
         return redirect()->route('specialty.index')
-                         ->with('success', 'Especialidad actualizada exitosamente.');
+                        ->with('success', 'Especialidad actualizada exitosamente.');
     }
 
     /**
@@ -108,6 +82,6 @@ class SpecialtiesController extends Controller
         $specialty->delete();
 
         return redirect()->route('specialty.index')
-                         ->with('success', 'Especialidad eliminada exitosamente.');
+                        ->with('success', 'Especialidad eliminada exitosamente.');
     }
 }

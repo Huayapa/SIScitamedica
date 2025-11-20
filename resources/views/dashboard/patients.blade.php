@@ -99,7 +99,7 @@
                         <a href="{{ route('patients.destroy', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
                             Borrar
                         </a>
-                        <a href="{{ route('patients.edit', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
+                        <a href="{{ route('patients.update', $patient) }}" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-center text-sm rounded-lg hover:bg-slate-700 transition-colors">
                             Editar
                         </a>
                     </div>

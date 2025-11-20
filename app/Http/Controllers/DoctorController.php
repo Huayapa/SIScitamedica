@@ -18,11 +18,11 @@ class DoctorController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%")
-                  ->orWhereHas('specialty', function($sq) use ($search) {
-                      $sq->where('name', 'like', "%{$search}%");
-                  });
+                ->orWhere('last_name', 'like', "%{$search}%")
+                ->orWhere('code', 'like', "%{$search}%")
+                ->orWhereHas('specialty', function($sq) use ($search) {
+                $sq->where('name', 'like', "%{$search}%");
+                });
             });
         }
 
@@ -35,7 +35,7 @@ class DoctorController extends Controller
     public function create()
     {
         $specialties = Specialty::where('is_active', true)->orderBy('name')->get();
-        return view('doctors.create', compact('specialties'));
+        return view('create.doctorscreate');
     }
 
     public function store(Request $request)
@@ -72,13 +72,13 @@ class DoctorController extends Controller
 
         $appointmentCount = $doctor->appointments()->count();
 
-        return view('doctors.show', compact('doctor', 'appointmentCount'));
+        return route('doctors.index');
     }
 
     public function edit(Doctor $doctor)
     {
         $specialties = Specialty::where('is_active', true)->orderBy('name')->get();
-        return view('doctors.edit', compact('doctor', 'specialties'));
+        return route('doctors.index');
     }
 
     public function update(Request $request, Doctor $doctor)
@@ -110,15 +110,4 @@ class DoctorController extends Controller
                         ->with('success', 'Médico eliminado exitosamente');
     }
 
-    public function schedule(Doctor $doctor)
-    {
-        $appointments = $doctor->appointments()
-                              ->with('patient')
-                              ->whereDate('appointment_date', '>=', today())
-                              ->orderBy('appointment_date')
-                              ->orderBy('appointment_time')
-                              ->get();
-
-        return view('doctors.schedule', compact('doctor', 'appointments'));
-    }
 }

@@ -54,9 +54,12 @@
         <!-- User info -->
         <div class="p-4 border-t border-slate-800">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center">
-                    <span class="text-slate-300 font-semibold">AD</span>
-                </div>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:opacity-50">
+                        <span class="material-icons text-white text-lg">logout</span>
+                    </button>
+                </form>
                 <div class="flex-1">
                     <div class="text-sm text-white"> {{ auth()->user()->name }}</div>
                     <div class="text-xs text-slate-400">{{ auth()->user()->email }}</div>

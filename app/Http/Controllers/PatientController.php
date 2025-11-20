@@ -26,12 +26,12 @@ class PatientController extends Controller
         $patients = $query->orderBy('first_name')
                          ->paginate(12);
 
-        return view('dashboard.paciente', compact('patients'));
+        return view('dashboard.patients', compact('patients'));
     }
 
     public function create()
     {
-        return view('dashboard.pacientecreate');
+        return view('create.patientscreate');
     }
 
     public function store(Request $request)
@@ -65,12 +65,12 @@ class PatientController extends Controller
                   ->orderBy('appointment_date', 'desc');
         }]);
 
-        return view('patients.show', compact('patient'));
+        return route('patients.index');
     }
 
     public function edit(Patient $patient)
     {
-        return view('patients.edit', compact('patient'));
+        return route('patients.index');
     }
 
     public function update(Request $request, Patient $patient)

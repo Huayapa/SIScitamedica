@@ -92,20 +92,20 @@
                             <td class="py-4 px-4">{!! $appointment->status_badge !!}</td>
                             <td class="py-4 px-4">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('appointments.edit', $appointment) }}" class="p-1 hover:bg-slate-700 rounded transition-colors">
+                                    <button 
+                                    @click="$dispatch('open-modal', 'edit-appointment'); $dispatch('set-appointment', @js($appointment))"
+                                    class="p-1 hover:bg-slate-700 rounded transition-colors" title="Editar">
                                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
-                                    </a>
-                                    <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" class="inline" onsubmit="return confirm('¿Está seguro de eliminar esta cita?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1 hover:bg-slate-700 rounded transition-colors">
-                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    </button>
+
+                                    <!-- Eliminar -->
+                                    <button @click="$dispatch('open-modal', 'delete-appointment')" class="p-1 hover:bg-slate-700 rounded text-red-500 transition-colors" title="Eliminar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -124,5 +124,74 @@
             </div>
         @endif
     </div>
+
 </div>
+
+
+
+<x-modal name="edit-appointment" 
+    x-data="{ appointment: {} }"
+    x-on:set-appointment.window="appointment = $event.detail">
+    <form method="POST" :action="`/appointments/${appointment.id}`" class="p-6 space-y-4">
+        @csrf
+        @method('PUT')
+
+        <h2 class="text-lg font-semibold text-white">Editar Cita</h2>
+
+        <select name="patient_id" required class="w-full p-2 rounded bg-slate-700 text-white">
+            @foreach($patients as $patient)
+                <option value="{{ $patient->id }}" {{ $appointment->patient_id == $patient->id ? 'selected' : '' }}>
+                    {{ $patient->full_name }}
+                </option>
+            @endforeach
+        </select>
+
+        <select name="doctor_id" required class="w-full p-2 rounded bg-slate-700 text-white">
+            @foreach($doctors as $doctor)
+                <option value="{{ $doctor->id }}" {{ $appointment->doctor_id == $doctor->id ? 'selected' : '' }}>
+                    {{ $doctor->full_name }}
+                </option>
+            @endforeach
+        </select>
+
+        <input type="date" name="appointment_date" value="{{ $appointment->appointment_date->format('Y-m-d') }}" class="w-full p-2 rounded bg-slate-700 text-white" required>
+        <input type="time" name="appointment_time" value="{{ $appointment->appointment_time }}" class="w-full p-2 rounded bg-slate-700 text-white" required>
+
+        <select name="status" class="w-full p-2 rounded bg-slate-700 text-white" required>
+            <option value="pending" {{ $appointment->status == 'pending' ? 'selected' : '' }}>Pendiente</option>
+            <option value="confirmed" {{ $appointment->status == 'confirmed' ? 'selected' : '' }}>Confirmada</option>
+            <option value="cancelled" {{ $appointment->status == 'cancelled' ? 'selected' : '' }}>Cancelada</option>
+            <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Completada</option>
+        </select>
+
+        <div class="flex justify-end gap-2">
+            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                Guardar Cambios
+            </button>
+            <button type="button" @click="showEditModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-700 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-300 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                Cancelar
+            </button>
+        </div>
+    </form>
+</x-modal>
+
+<x-modal name="delete-appointment" focusable>
+    <div class="p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-white">Eliminar Cita</h2>
+        <p class="text-sm text-slate-300">¿Está seguro de eliminar esta cita? Esta acción no se puede deshacer.</p>
+
+        <form method="POST" action="{{ route('appointments.destroy', $appointment) }}">
+            @csrf
+            @method('DELETE')
+            <div class="flex justify-end gap-2">
+                <button type="button" @click="showDeleteModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-700 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-300 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancelar
+                </button>
+                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                    Eliminar
+                </button>
+            </div>
+        </form>
+    </div>
+</x-modal>
 @endsection
